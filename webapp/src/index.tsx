@@ -5,7 +5,8 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {Api, JsonRpc} from 'eosjs';
 import {JsSignatureProvider} from 'eosjs/dist/eosjs-jssig';
-import {Navbar, Button} from 'react-bootstrap';
+import {Navbar} from 'react-bootstrap';
+import Button from 'react-bootstrap-button-loader';
 
 const rpc = new JsonRpc(''); // nodeos and web server are on same port
 
@@ -14,12 +15,13 @@ interface AppData {
     privateKey: string;
     user?: string;
     error: string;
-    issueTo: string;
     issueAmount: string;
     transferTo: string;
     transferAmount: string;
     balance: string;
-};
+    loadingIssue: boolean;
+    loadingTransfer: boolean;
+}
 
 
 class App extends React.Component<{}, AppData> {
@@ -32,12 +34,18 @@ class App extends React.Component<{}, AppData> {
             privateKey: '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3',
             user: 'bob',
             error: '',
-            issueTo: '',
-            issueAmount: '',
+            issueAmount: '100.0000 POINTS',
             transferTo: '',
-            transferAmount: '',
-            balance: ''
+            transferAmount: '100.0000 POINTS',
+            balance: '',
+            loadingIssue: false,
+            loadingTransfer: false
         };
+    }
+
+    async updateUser(value: string){
+        this.setState({user: value});
+        this.getBalance().then(() => {});
     }
 
     async getBalance() {
@@ -52,6 +60,7 @@ class App extends React.Component<{}, AppData> {
     }
 
     async issue() {
+        this.setState({loadingIssue: true});
         try {
             this.api.signatureProvider = new JsSignatureProvider([this.state.privateKey]);
             const result = await this.api.transact(
@@ -63,7 +72,7 @@ class App extends React.Component<{}, AppData> {
                             actor: this.state.user,
                             permission: 'active',
                         }],
-                        data: {"to": this.state.issueTo, "quantity": this.state.issueAmount, "memo": "Issue Gift Card"}
+                        data: {"to": this.state.user, "quantity": this.state.issueAmount, "memo": "Issue Gift Card"}
                     }]
                 }, {
                     blocksBehind: 3,
@@ -71,15 +80,18 @@ class App extends React.Component<{}, AppData> {
                 });
             console.log(result);
             this.setState({error: ''});
+            alert('Issue was successful!')
         } catch (e) {
             if (e.json)
                 this.setState({error: JSON.stringify(e.json, null, 4)});
             else
                 this.setState({error: '' + e});
         }
+        this.setState({loadingIssue: false});
     }
 
     async transfer() {
+        this.setState({loadingTransfer: true});
         try {
             this.api.signatureProvider = new JsSignatureProvider([this.state.privateKey]);
             const result = await this.api.transact(
@@ -102,12 +114,18 @@ class App extends React.Component<{}, AppData> {
                 });
             console.log(result);
             this.setState({error: ''});
+            alert('Transfer was successful!')
         } catch (e) {
             if (e.json)
                 this.setState({error: JSON.stringify(e.json, null, 4)});
             else
                 this.setState({error: '' + e});
         }
+        this.setState({loadingTransfer: false});
+    }
+
+    componentDidMount(){
+        this.getBalance().then(() => {});
     }
 
     render() {
@@ -136,8 +154,7 @@ class App extends React.Component<{}, AppData> {
                         <td><input
                             style={{width: 500}}
                             value={this.state.user}
-                            onChange={e => this.setState({user: e.target.value})}
-                            onKeyDown={this.getBalance.bind(this)}
+                            onChange={e => this.updateUser(e.target.value)}
                         /></td>
                     </tr>
                     </tbody>
@@ -149,14 +166,6 @@ class App extends React.Component<{}, AppData> {
                 <table>
                     <tbody>
                     <tr>
-                        <td>Issue To</td>
-                        <td><input
-                            style={{width: 500}}
-                            value={this.state.issueTo}
-                            onChange={e => this.setState({issueTo: e.target.value})}
-                        /></td>
-                    </tr>
-                    <tr>
                         <td>Issue Amount</td>
                         <td><input
                             style={{width: 500}}
@@ -166,7 +175,10 @@ class App extends React.Component<{}, AppData> {
                     </tr>
                     </tbody>
                 </table>
-                <Button onClick={this.issue.bind(this)} style={{marginTop: "5px"}}>Issue</Button>
+                <Button variant="primary btn" onClick={this.issue.bind(this)} style={{marginTop: "5px"}}
+                        loading={this.state.loadingIssue}>
+                    Issue
+                </Button>
                 <br/>
                 <br/>
                 <h5>Use Gift Card</h5>
@@ -190,7 +202,10 @@ class App extends React.Component<{}, AppData> {
                     </tr>
                     </tbody>
                 </table>
-                <Button onClick={this.transfer.bind(this)} style={{marginTop: "5px"}}>Transfer</Button>
+                <Button variant="primary btn" onClick={this.transfer.bind(this)} style={{marginTop: "5px"}}
+                        loading={this.state.loadingTransfer}>
+                    Transfer
+                </Button>
                 <br/>
                 <br/>
                 {this.state.error && <div>

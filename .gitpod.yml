@@ -15,6 +15,6 @@ ports:
 tasks:
 - before: cd webapp
   init: yarn
-  command: nginx -c $PWD/nginx.conf; npx webpack-dev-server
+  command: nginx -c $PWD/nginx.conf; npx webpack-dev-server --mode development --inline --progress --watch
 - before: cleos wallet unlock --password </password
   command: nodeos --config-dir ~/eosio/chain/config --data-dir ~/eosio/chain/data -e -p eosio --plugin eosio::chain_api_plugin --contracts-console
