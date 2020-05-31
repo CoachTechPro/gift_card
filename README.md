@@ -1,4 +1,6 @@
 # Gift Card Dapp For Businesses
+Merchant issues Gift Card points and transfers them to the user whenever user purchases Gift Card for later use. Later
+whenever user wants to buy something, then they can make the purchase using Gift Card points.
 
 # Setup
 
