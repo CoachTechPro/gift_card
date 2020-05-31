@@ -2,6 +2,14 @@
 Merchant issues Gift Card points and transfers them to the user whenever user purchases Gift Card for later use. Later
 whenever user wants to buy something, then they can make the purchase using Gift Card points.
 
+## Why Gift Cards?
+* During the coronavirus pandemic, gift cards are a lifeline for small businesses.
+* Allows people a way to support businesses.
+* Businesses can generate revenue when their existing revenue streams are reduced or interrupted.
+* People can redeem their gift card in full or in part, which can encourage return visits.
+* People can buy a gift card for someone else or use it themselves.
+* Businesses can start online orders powered by gift card payments.
+
 # Setup
 
 1. Fork this repo to your personal GitHub account so that you can save your work into your personal Github account.
