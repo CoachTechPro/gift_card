@@ -43,9 +43,8 @@ class App extends React.Component<{}, AppData> {
         };
     }
 
-    async updateUser(value: string){
-        this.setState({user: value});
-        this.getBalance().then(() => {});
+    updateUser(value: string){
+        this.setState({user: value}, function(){this.getBalance().then(() => {})});
     }
 
     async getBalance() {
@@ -54,7 +53,9 @@ class App extends React.Component<{}, AppData> {
         }
         try {
             let balance = await rpc.get_currency_balance('eosio.token', this.state.user, 'POINTS');
-            this.setState({balance: balance[0]})
+            if(balance.length === 1){
+                this.setState({balance: balance[0]});
+            }
         } catch (e) {
         }
     }
@@ -87,6 +88,7 @@ class App extends React.Component<{}, AppData> {
             else
                 this.setState({error: '' + e});
         }
+        await this.getBalance();
         this.setState({loadingIssue: false});
     }
 
@@ -121,6 +123,7 @@ class App extends React.Component<{}, AppData> {
             else
                 this.setState({error: '' + e});
         }
+        await this.getBalance();
         this.setState({loadingTransfer: false});
     }
 
