@@ -16,7 +16,7 @@ The following instructions assume that the Web IDE was started successfully (see
 
 To open a terminal, use the Terminal drop-down menu in the IDE user interface.
 
-## Compile and deploy contreact
+## Compile and deploy contract
 
 Run this in a terminal:
 
