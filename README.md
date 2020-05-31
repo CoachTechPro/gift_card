@@ -21,10 +21,10 @@ To open a terminal, use the Terminal drop-down menu in the IDE user interface.
 Run this in a terminal:
 
 ```
+cd contract/eosio.token
 cleos create account eosio eosio.token EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 eosio-cpp -I include -o eosio.token.wasm src/eosio.token.cpp --abigen
-cleos set contract eosio.token CONTRACTS_DIR/eosio.contracts/contracts/eosio.token --abi eosio.token.abi -p eosio.token@active
-
+cleos set contract eosio.token /workspace/gift_card/contract/eosio.token --abi eosio.token.abi -p eosio.token@active
 ```
 
 ## Creating users and using the contract
